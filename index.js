@@ -1,5 +1,5 @@
 const apiKey = "289f81960f0969aec52e9047460b106f"
-const url = `https://gnews.io/api/v4/search?lang=pt&q=technology&token=${apiKey}`
+const url = `https://gnews.io/api/v4/search?q=technology&token=${apiKey}`
 
 fetch(url)
   .then((response) => response.json())
