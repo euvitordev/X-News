@@ -1,32 +1,35 @@
-const apiKey = "765e6d14e97e4d86841a758c39cab2e5"
-const apiUrl = `https://newsapi.org/v2/top-headlines?country=br&apiKey=${apiKey}` // substitua "br" pelo código do país desejado
+const apiKey = "289f81960f0969aec52e9047460b106f"
+const url = `https://gnews.io/api/v4/search?lang=pt&q=technology&token=${apiKey}`
 
-const newsDiv = document.getElementById("news")
+fetch(url)
+  .then((response) => response.json())
+  .then((data) => {
+    const articles = data.articles
+    const newsContainer = document.querySelector("#news-container")
 
-// Adicione o código abaixo ao final do arquivo script.js
-window.addEventListener("load", () => {
-  fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      const articles = data.articles
-      newsDiv.innerHTML = ""
-      articles.forEach((article) => {
-        const articleDiv = document.createElement("div")
-        const title = document.createElement("h2")
-        const description = document.createElement("p")
-        const url = document.createElement("a")
+    articles.forEach((article) => {
+      const newsItem = document.createElement("div")
+      newsItem.classList.add("news-item")
 
-        title.innerText = article.title
-        description.innerText = article.description
-        url.innerText = "Read More"
-        url.href = article.url
-        url.target = "_blank"
+      const title = document.createElement("h2")
+      title.textContent = article.title
 
-        articleDiv.appendChild(title)
-        articleDiv.appendChild(description)
-        articleDiv.appendChild(url)
-        newsDiv.appendChild(articleDiv)
-      })
+      const image = document.createElement("img")
+      image.src = article.image
+
+      const description = document.createElement("p")
+      description.textContent = article.description
+
+      const url = document.createElement("a")
+      url.href = article.url
+      url.textContent = "Leia mais"
+
+      newsItem.appendChild(title)
+      newsItem.appendChild(image)
+      newsItem.appendChild(description)
+      newsItem.appendChild(url)
+
+      newsContainer.appendChild(newsItem)
     })
-    .catch((error) => console.log(error))
-})
+  })
+  .catch((error) => console.log(error))
