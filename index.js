@@ -1,35 +1,25 @@
-const apiKey = "289f81960f0969aec52e9047460b106f"
-const url = `https://gnews.io/api/v4/search?q=technology&token=${apiKey}`
+const url = `https://newsapi.org/v2/top-headlines?sources=google-news-br&apiKey=765e6d14e97e4d86841a758c39cab2e5
+`
 
-fetch(url)
-  .then((response) => response.json())
-  .then((data) => {
-    const articles = data.articles
-    const newsContainer = document.querySelector("#news-container")
+axios
+  .get(url)
+  .then((response) => {
+    const articles = response.data.articles
+    const table = document
+      .getElementById("newsTable")
+      .getElementsByTagName("tbody")[0]
 
     articles.forEach((article) => {
-      const newsItem = document.createElement("div")
-      newsItem.classList.add("news-item")
+      const row = table.insertRow(-1)
+      const sourceCell = row.insertCell(0)
+      const titleCell = row.insertCell(1)
+      const dateCell = row.insertCell(2)
 
-      const title = document.createElement("h2")
-      title.textContent = article.title
-
-      const image = document.createElement("img")
-      image.src = article.image
-
-      const description = document.createElement("p")
-      description.textContent = article.description
-
-      const url = document.createElement("a")
-      url.href = article.url
-      url.textContent = "Leia mais"
-
-      newsItem.appendChild(title)
-      newsItem.appendChild(image)
-      newsItem.appendChild(description)
-      newsItem.appendChild(url)
-
-      newsContainer.appendChild(newsItem)
+      sourceCell.innerHTML = article.source.name
+      titleCell.innerHTML = `<a href="${article.url}" target="_blank">${article.title}</a>`
+      dateCell.innerHTML = new Date(article.publishedAt).toLocaleString()
     })
   })
-  .catch((error) => console.log(error))
+  .catch((error) => {
+    console.error(error)
+  })
