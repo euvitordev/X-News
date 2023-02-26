@@ -1,25 +1,23 @@
-const url = `https://newsapi.org/v2/top-headlines?sources=google-news-br&apiKey=765e6d14e97e4d86841a758c39cab2e5
-`
+const API_KEY = "D4Py7ztFBmGOpnKh9c-w0UG-2yqFI0WQ43SkUfa0aOk"
+const URL = `https://api.newscatcherapi.com/v2/search?q=noticias&lang=pt&sort_by=relevancy&page=1`
 
-axios
-  .get(url)
-  .then((response) => {
-    const articles = response.data.articles
-    const table = document
-      .getElementById("newsTable")
-      .getElementsByTagName("tbody")[0]
-
-    articles.forEach((article) => {
-      const row = table.insertRow(-1)
-      const sourceCell = row.insertCell(0)
-      const titleCell = row.insertCell(1)
-      const dateCell = row.insertCell(2)
-
-      sourceCell.innerHTML = article.source.name
-      titleCell.innerHTML = `<a href="${article.url}" target="_blank">${article.title}</a>`
-      dateCell.innerHTML = new Date(article.publishedAt).toLocaleString()
+fetch(URL, { headers: { "x-api-key": API_KEY } })
+  .then((response) => response.json())
+  .then((data) => {
+    const noticias = data.articles
+    const divNoticias = document.getElementById("news")
+    noticias.forEach((noticia) => {
+      const { title, link, pubDate } = noticia
+      const pTitulo = document.createElement("p")
+      const aLink = document.createElement("a")
+      const pData = document.createElement("p")
+      pTitulo.textContent = title
+      aLink.href = link
+      aLink.textContent = link
+      pData.textContent = pubDate
+      divNoticias.appendChild(pTitulo)
+      divNoticias.appendChild(aLink)
+      divNoticias.appendChild(pData)
     })
   })
-  .catch((error) => {
-    console.error(error)
-  })
+  .catch((error) => console.error(error))
